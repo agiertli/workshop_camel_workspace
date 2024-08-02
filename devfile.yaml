@@ -2,7 +2,7 @@ schemaVersion: 2.1.0
 metadata:
   name: workshop-camel-workspace
 components:
-  - name: tools
+  - name: tools-custom
     container:
       image: quay.io/devfile/universal-developer-image:latest
       memoryRequest: 1Gi
