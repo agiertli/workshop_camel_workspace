@@ -1,0 +1,35 @@
+- beans:
+    - name: customerDb
+      properties:
+        databaseName: "{{db.databaseName:public}}"
+        password: "{{db.password:Abcd1234}}"
+        portNumber: "{{db.port:5432}}"
+        serverName: "{{db.serverName:localhost}}"
+        user: "{{db.user:user1}}"
+      type: org.postgresql.ds.PGSimpleDataSource
+- route:
+    id: create-customer
+    from:
+      id: from-3903
+      uri: direct:createCustomer
+      parameters: {}
+      steps:
+        - unmarshal:
+            id: unmarshal-1515
+            json:
+              unmarshalType: java.util.Map
+        - log:
+            id: log-4275
+            message: "Inserting customer: customer_id='${body[\"customerId\"]}',
+              name='${body[\"customerName\"]}'"
+        - to:
+            id: to-1463
+            uri: sql:INSERT INTO customer (customer_id, name) VALUES (:#customerId,
+              :#customerName);
+            parameters:
+              dataSource: "#customerDb"
+        - setBody:
+            id: setBody-1436
+            expression:
+              simple:
+                expression: ${null}
