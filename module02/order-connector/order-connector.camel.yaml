@@ -1,0 +1,35 @@
+- route:
+    id: katka-to-expense-api
+    from:
+      id: katka
+      uri: kafka:globex.order-aggregated
+      parameters:
+        autoOffsetReset: earliest
+        brokers: "{{kafka.brokers:localhost:9092}}"
+        groupId: order-cashback-connector
+        saslJaasConfig: "{{?kafka.saslJaasConfig}}"
+        saslMechanism: "{{?kafka.saslMechanism}}"
+        securityProtocol: "{{?kafka.securityProtocol}}"
+      steps:
+        - log:
+            id: log-7812
+            message: "Picked up customer aggregated order message: '${body}'"
+        - choice:
+            id: choice-1090
+            otherwise:
+              id: otherwise-7841
+              steps:
+                - to:
+                    id: to-4133
+                    uri: rest:post:/expense
+                    parameters:
+                      bindingMode: "off"
+                      host: "{{cashback-service.url:localhost:8080}}"
+            when:
+              - id: when-3234
+                steps:
+                  - stop:
+                      id: stop-1509
+                expression:
+                  simple:
+                    expression: ${body} == ${null} || ${body} regex "\s*"
