@@ -1,4 +1,8 @@
 {
 "workbench.colorTheme": "Default Light Modern"
-  
+  "window.autoDetectColorScheme": true,
+  "workbench.preferredLightColorTheme": "Default Light Modern",
+      "workbench.settings.applyToAllProfiles": [
+        "workbench.colorTheme"
+    ],
 }
